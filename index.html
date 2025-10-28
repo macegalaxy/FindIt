@@ -438,7 +438,7 @@
 <body>
     <!-- Login Screen -->
     <div id="loginScreen" class="login-screen">
-        <h1>🔍 Find It</h1>
+        <h1>🔍 School Lost & Found</h1>
         <p>Find your lost items or report found items</p>
         
         <form class="login-form" onsubmit="handleLogin(event)">
@@ -759,8 +759,7 @@
                 </div>
             `).join('');
         }
-
-        // Open Claim Form
+// Open Claim Form
         function openClaimForm(itemId) {
             const claimantName = prompt('Enter your name:');
             if (!claimantName) return;
@@ -776,6 +775,15 @@
                 saveItemsToStorage();
                 displayClaimItems();
                 alert('Item claimed successfully!');
+            }
+        }
+
+        function deleteItem(itemId) {
+            if (confirm('Are you sure you want to delete this item?')) {
+                items = items.filter(item => item.id !== itemId);
+                saveItemsToStorage();
+                displayCatalog();
+                alert('Item deleted successfully!');
             }
         }
 
