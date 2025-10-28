@@ -315,10 +315,10 @@
         function loadItemsFromStorage() {
             const stored = localStorage.getItem('lostFoundItems');
             items = stored ? JSON.parse(stored) : [
-                { id: 1, name: 'Blue Backpack', description: 'Navy blue backpack with laptop compartment', location: 'Library', dateFound: '2024-01-15', claimed: false },
-                { id: 2, name: 'Red Water Bottle', description: 'Stainless steel water bottle', location: 'Gym', dateFound: '2024-01-14', claimed: true, claimedBy: 'John Smith', claimDate: '2024-01-16' },
-                { id: 3, name: 'Black Umbrella', description: 'Compact black umbrella', location: 'Main Entrance', dateFound: '2024-01-13', claimed: false },
-                { id: 4, name: 'Silver Watch', description: 'Digital watch with blue band', location: 'Cafeteria', dateFound: '2024-01-12', claimed: false }
+                { id: 1, name: 'Blue Backpack', description: 'Navy blue backpack with laptop compartment', location: 'Library', dateFound: '2024-01-15', reporter: 'Chester Main', claimed: false },
+                { id: 2, name: 'Red Water Bottle', description: 'Stainless steel water bottle', location: 'Gym', dateFound: '2024-01-14', reporter: 'Mike Zula', claimed: true, claimedBy: 'John Smith', claimDate: '2024-01-16' },
+                { id: 3, name: 'Black Umbrella', description: 'Compact black umbrella', location: 'Main Entrance', dateFound: '2024-01-13', reporter: 'Pheobe Creat', claimed: false },
+                { id: 4, name: 'Silver Watch', description: 'Digital watch with blue band', location: 'Cafeteria', dateFound: '2024-01-12', reporter: 'Karen Mince', claimed: false }
             ];
         }
 
@@ -483,6 +483,10 @@
                                 <div class="detail-label">Date Found</div>
                                 <div class="detail-value">${item.dateFound}</div>
                             </div>
+                            <div class="detail">
+                                <div class="detail-label">Reported By</div>
+                                <div class="detail-value">${item.reporter}</div>
+                            </div>
                             ${item.claimed ? `
                                 <div class="detail">
                                     <div class="detail-label">Claimed By</div>
@@ -545,6 +549,10 @@
                             <div class="detail">
                                 <div class="detail-label">Date Found</div>
                                 <div class="detail-value">${item.dateFound}</div>
+                            </div>
+                            <div class="detail">
+                                <div class="detail-label">Reported By</div>
+                                <div class="detail-value">${item.reporter}</div>
                             </div>
                             ${item.claimed ? `
                                 <div class="detail">
@@ -637,6 +645,7 @@
                 description: document.getElementById('itemDescription').value,
                 location: document.getElementById('itemLocation').value,
                 dateFound: document.getElementById('itemDate').value,
+                reporter: document.getElementById('reporterName').value,
                 claimed: false
             };
 
@@ -695,6 +704,10 @@
                             <div class="detail">
                                 <div class="detail-label">Date Found</div>
                                 <div class="detail-value">${item.dateFound}</div>
+                            </div>
+                            <div class="detail">
+                                <div class="detail-label">Reported By</div>
+                                <div class="detail-value">${item.reporter}</div>
                             </div>
                         </div>
                         <div class="item-actions">
