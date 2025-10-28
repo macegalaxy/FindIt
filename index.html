@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Lost and Found System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        /* Login Screen */
+        .login-screen {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            text-align: center;
+        }
+
+        .login-screen h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .login-screen p {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        .form-group label {
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .login-button {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .login-button:hover {
+            background: #5568d3;
+        }
+
+        .demo-credentials {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .demo-credentials h3 {
+            color: #333;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .demo-credentials p {
+            color: #666;
+            margin: 6px 0;
+            font-size: 13px;
+        }
+
+        .demo-credentials code {
+            background: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+            color: #667eea;
+        }
+
+        /* Main App Screen */
+        .app-screen {
+            display: none;
+        }
+
+        .app-screen.active {
+            display: block;
+        }
+
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 24px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info span {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .logout-button {
+            background: #e74c3c;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        .logout-button:hover {
+            background: #c0392b;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-tab {
+            background: white;
+            border: 2px solid #e0e0e0;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s;
+        }
+
+        .nav-tab:hover {
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .nav-tab.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .nav-tab.hidden {
+            display: none;
+        }
+
+        /* Content Sections */
+        .content-section {
+            display: none;
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .content-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+
+        /* Search Bar */
+        .search-container {
+            margin-bottom: 25px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        /* Items Grid */
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .item-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+
+        .item-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-color: #667eea;
+        }
+
+        .item-card.claimed {
+            background: #f0f0f0;
+            opacity: 0.7;
+        }
+
+        .item-card h3 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .item-card p {
+            color: #666;
+            margin: 8px 0;
+            font-size: 14px;
+        }
+
+        .item-card .label {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .item-card .claimed-badge {
+            display: inline-block;
+            background: #e74c3c;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        .item-card .found-badge {
+            display: inline-block;
+            background: #27ae60;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        /* Form Styles */
+        .form-section {
+            max-width: 600px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 100px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .submit-button {
+            background: #27ae60;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .submit-button:hover {
+            background: #229954;
+        }
+
+        .claim-button {
+            background: #3498db;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+
+        .claim-button:hover {
+            background: #2980b9;
+        }
+
+        .claim-button:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+        }
+
+        /* Message */
+        .message {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .no-items {
+            text-align: center;
+            color: #999;
+            padding: 40px 20px;
+            font-size: 16px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .login-screen {
+                padding: 25px;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .user-info {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .items-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-tabs {
+                flex-direction: column;
+            }
+
+            .nav-tab {
+                width: 100%;
+                text-align: center;
+            }
+
+            .content-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-screen">
+        <h1>🔍 Find It</h1>
+        <p>Find your lost items or report found items</p>
+        
+        <form class="login-form" onsubmit="handleLogin(event)">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required>
+            </div>
+            <button type="submit" class="login-button">Login</button>
+        </form>
+
+        <div class="demo-credentials">
+            <h3>Demo Credentials:</h3>
+            <p><strong>Admin:</strong> <code>admin</code> / <code>password</code></p>
+            <p><strong>Staff:</strong> <code>staff</code> / <code>staff123</code></p>
+            <p><strong>Student:</strong> <code>student</code> / <code>student123</code></p>
+        </div>
+    </div>
+
+    <!-- Main App Screen -->
+    <div id="appScreen" class="app-screen">
+        <div class="header">
+            <h1>🔍 School Lost & Found</h1>
+            <div class="user-info">
+                <span>Welcome, <strong id="userDisplay"></strong></span>
+                <button class="logout-button" onclick="handleLogout()">Logout</button>
+            </div>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="switchTab('catalog')">Item Catalog</button>
+            <button class="nav-tab" id="reportTab" onclick="switchTab('report')">Report Found Item</button>
+            <button class="nav-tab" id="claimTab" onclick="switchTab('claim')">Claim Item</button>
+        </div>
+
+        <!-- Catalog Section -->
+        <div id="catalogSection" class="content-section active">
+            <h2>Found Items Catalog</h2>
+            <div class="search-container">
+                <input type="text" class="search-input" id="searchInput" placeholder="Search by item name, description, or location...">
+            </div>
+            <div id="itemsContainer" class="items-grid"></div>
+        </div>
+
+        <!-- Report Section -->
+        <div id="reportSection" class="content-section">
+            <h2>Report a Found Item</h2>
+            <div class="form-section">
+                <form onsubmit="handleReportItem(event)">
+                    <div class="form-group">
+                        <label for="itemName">Item Name</label>
+                        <input type="text" id="itemName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="itemDescription">Description</label>
+                        <textarea id="itemDescription" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="itemLocation">Location Found</label>
+                        <input type="text" id="itemLocation" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reporterName">Your Name</label>
+                        <input type="text" id="reporterName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="dateFound">Date Found</label>
+                        <input type="date" id="dateFound" required>
+                    </div>
+                    <button type="submit" class="submit-button">Report Item</button>
+                </form>
+                <div id="reportMessage"></div>
+            </div>
+        </div>
+
+        <!-- Claim Section -->
+        <div id="claimSection" class="content-section">
+            <h2>Claim an Item</h2>
+            <div id="claimItemsContainer" class="items-grid"></div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data
+        let items = [
+            {
+                id: 1,
+                name: 'Blue Backpack',
+                description: 'Navy blue backpack with laptop compartment',
+                location: 'Library',
+                dateFound: '2024-10-25',
+                reportedBy: 'John Smith',
+                claimed: false,
+                claimedBy: null,
+                claimDate: null
+            },
+            {
+                id: 2,
+                name: 'Black Umbrella',
+                description: 'Compact black umbrella with wooden handle',
+                location: 'Main Entrance',
+                dateFound: '2024-10-24',
+                reportedBy: 'Sarah Johnson',
+                claimed: false,
+                claimedBy: null,
+                claimDate: null
+            },
+            {
+                id: 3,
+                name: 'Silver Watch',
+                description: 'Digital watch with blue band',
+                location: 'Cafeteria',
+                dateFound: '2024-10-23',
+                reportedBy: 'Mike Davis',
+                claimed: false,
+                claimedBy: null,
+                claimDate: null
+            }
+        ];
+
+        let currentUser = null;
+        let currentRole = null;
+
+        // Initialize
+        function init() {
+            loadItemsFromStorage();
+            setupSearchListener();
+        }
+
+        // Load items from localStorage
+        function loadItemsFromStorage() {
+            const stored = localStorage.getItem('lostFoundItems');
+            if (stored) {
+                items = JSON.parse(stored);
+            } else {
+                saveItemsToStorage();
+            }
+        }
+
+        // Save items to localStorage
+        function saveItemsToStorage() {
+            localStorage.setItem('lostFoundItems', JSON.stringify(items));
+        }
+
+        // Handle Login
+        function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            const credentials = {
+                'admin': { password: 'password', role: 'admin' },
+                'staff': { password: 'staff123', role: 'staff' },
+                'student': { password: 'student123', role: 'student' }
+            };
+
+            if (credentials[username] && credentials[username].password === password) {
+                currentUser = username;
+                currentRole = credentials[username].role;
+                showAppScreen();
+            } else {
+                alert('Invalid credentials. Please try again.');
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+            }
+        }
+
+        // Show App Screen
+        function showAppScreen() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('appScreen').classList.add('active');
+            document.getElementById('userDisplay').textContent = currentUser;
+
+            // Hide tabs based on role
+            const reportTab = document.getElementById('reportTab');
+            const claimTab = document.getElementById('claimTab');
+
+            if (currentRole === 'student') {
+                reportTab.classList.add('hidden');
+                claimTab.classList.add('hidden');
+            } else {
+                reportTab.classList.remove('hidden');
+                claimTab.classList.remove('hidden');
+            }
+
+            displayCatalog();
+        }
+
+        // Handle Logout
+        function handleLogout() {
+            currentUser = null;
+            currentRole = null;
+            document.getElementById('appScreen').classList.remove('active');
+            document.getElementById('loginScreen').style.display = 'block';
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+        }
+
+        // Switch Tab
+        function switchTab(tabName) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Remove active from all tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected section
+            document.getElementById(tabName + 'Section').classList.add('active');
+
+            // Add active to clicked tab
+            event.target.classList.add('active');
+
+            // Refresh content
+            if (tabName === 'catalog') {
+                displayCatalog();
+            } else if (tabName === 'claim') {
+                displayClaimItems();
+            }
+        }
+
+        // Display Catalog
+        function displayCatalog() {
+            const container = document.getElementById('itemsContainer');
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+
+            let filteredItems = items.filter(item => {
+                return item.name.toLowerCase().includes(searchTerm) ||
+                       item.description.toLowerCase().includes(searchTerm) ||
+                       item.location.toLowerCase().includes(searchTerm);
+            });
+
+            if (filteredItems.length === 0) {
+                container.innerHTML = '<div class="no-items">No items found matching your search.</div>';
+                return;
+            }
+
+            container.innerHTML = filteredItems.map(item => `
+                <div class="item-card ${item.claimed ? 'claimed' : ''}">
+                    <h3>${item.name}</h3>
+                    <p><span class="label">Description:</span> ${item.description}</p>
+                    <p><span class="label">Location Found:</span> ${item.location}</p>
+                    <p><span class="label">Date Found:</span> ${item.dateFound}</p>
+                    <p><span class="label">Reported By:</span> ${item.reportedBy}</p>
+                    ${item.claimed ? `
+                        <div class="claimed-badge">CLAIMED</div>
+                        <p><span class="label">Claimed By:</span> ${item.claimedBy}</p>
+                        <p><span class="label">Claim Date:</span> ${item.claimDate}</p>
+                    ` : `
+                        <div class="found-badge">AVAILABLE</div>
+                    `}
+                </div>
+            `).join('');
+        }
+
+        // Setup Search Listener
+        function setupSearchListener() {
+            document.getElementById('searchInput').addEventListener('input', displayCatalog);
+        }
+
+        // Handle Report Item
+        function handleReportItem(event) {
+            event.preventDefault();
+
+            const newItem = {
+                id: Math.max(...items.map(i => i.id), 0) + 1,
+                name: document.getElementById('itemName').value,
+                description: document.getElementById('itemDescription').value,
+                location: document.getElementById('itemLocation').value,
+                dateFound: document.getElementById('dateFound').value,
+                reportedBy: document.getElementById('reporterName').value,
+                claimed: false,
+                claimedBy: null,
+                claimDate: null
+            };
+
+            items.push(newItem);
+            saveItemsToStorage();
+
+            // Show success message
+            const messageDiv = document.getElementById('reportMessage');
+            messageDiv.className = 'message success';
+            messageDiv.textContent = 'Item reported successfully!';
+
+            // Reset form
+            event.target.reset();
+
+            // Clear message after 3 seconds
+            setTimeout(() => {
+                messageDiv.textContent = '';
+            }, 3000);
+        }
+
+        // Display Claim Items
+        function displayClaimItems() {
+            const container = document.getElementById('claimItemsContainer');
+            const availableItems = items.filter(item => !item.claimed);
+
+            if (availableItems.length === 0) {
+                container.innerHTML = '<div class="no-items">No items available to claim.</div>';
+                return;
+            }
+
+            container.innerHTML = availableItems.map(item => `
+                <div class="item-card">
+                    <h3>${item.name}</h3>
+                    <p><span class="label">Description:</span> ${item.description}</p>
+                    <p><span class="label">Location Found:</span> ${item.location}</p>
+                    <p><span class="label">Date Found:</span> ${item.dateFound}</p>
+                    <p><span class="label">Reported By:</span> ${item.reportedBy}</p>
+                    <button class="claim-button" onclick="openClaimForm(${item.id})">Claim This Item</button>
+                </div>
+            `).join('');
+        }
+
+        // Open Claim Form
+        function openClaimForm(itemId) {
+            const claimantName = prompt('Enter your name:');
+            if (!claimantName) return;
+
+            const claimDate = prompt('Enter claim date (YYYY-MM-DD):', new Date().toISOString().split('T')[0]);
+            if (!claimDate) return;
+
+            const item = items.find(i => i.id === itemId);
+            if (item) {
+                item.claimed = true;
+                item.claimedBy = claimantName;
+                item.claimDate = claimDate;
+                saveItemsToStorage();
+                displayClaimItems();
+                alert('Item claimed successfully!');
+            }
+        }
+
+        // Start app
+        init();
+    </script>
+</body>
+</html>
